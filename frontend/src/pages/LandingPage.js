@@ -8,7 +8,12 @@ const LandingPage = () => {
         <div className="text-center">
           <h1 className="text-4xl font-bold">Welcome to Salon Booking</h1>
           <p className="mt-4">Book your appointments with ease and style</p>
-          <a href="/booking" className="mt-6 inline-block bg-pink-600 text-white px-6 py-2 rounded-full">Book Now</a>
+          <a 
+            href="/booking" 
+            className="mt-6 inline-block bg-pink-600 text-white px-6 py-2 rounded-full hover:bg-pink-700 focus:outline-none focus:ring-4 focus:ring-pink-400"
+          >
+            Book Now
+          </a>
         </div>
       </section>
 
@@ -17,15 +22,15 @@ const LandingPage = () => {
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="service-item p-6 bg-white rounded-lg shadow-md">
+            <div className="service-item p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-semibold">Haircut</h3>
               <p>Get the best haircut from our professional stylists.</p>
             </div>
-            <div className="service-item p-6 bg-white rounded-lg shadow-md">
+            <div className="service-item p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-semibold">Manicure</h3>
               <p>Pamper yourself with a refreshing manicure session.</p>
             </div>
-            <div className="service-item p-6 bg-white rounded-lg shadow-md">
+            <div className="service-item p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-semibold">Hair Coloring</h3>
               <p>Transform your look with our expert hair coloring services.</p>
             </div>

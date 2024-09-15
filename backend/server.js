@@ -1,10 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const bookingRoutes = require('./routes/bookingRoutes');
+const connectDB = require('./config/db');  // Import the MongoDB connection
+const authRoutes = require('./routes/authRoutes');
 
 // Load environment variables
-dotenv.config();
+dotenv.config(); 
 
 // App initialization
 const app = express();
@@ -12,9 +14,11 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
-  console.log('Connected to MongoDB');
-});
+connectDB();  // Call the connection function from db.js
+
+// Routes
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/auth', authRoutes);
 
 // Test route
 app.get('/', (req, res) => {

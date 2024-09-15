@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BookingPage = () => {
-  // State to store form data
   const [formData, setFormData] = useState({
     service: '',
     date: '',
     time: ''
   });
+
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
+  // Get the user info from localStorage
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -17,15 +25,38 @@ const BookingPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
-    // Here we can send the form data to the backend via API
+
+    try {
+      // Include the JWT token in the request headers
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const response = await axios.post('http://localhost:8080/api/bookings', formData, config);
+      setMessage('Booking successful!');  // Success message
+      setSuccess(true);
+      // Redirect to confirmation page with the booking details
+      navigate('/confirmation', { state: { ...formData } });
+    } catch (error) {
+      console.error('Error booking:', error);
+      setMessage(error.response?.data?.message || 'Booking failed, please try again.');
+      setSuccess(false);
+    }
   };
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold text-center mb-6">Book Your Appointment</h1>
+
+      {message && (
+        <div className={`text-center ${success ? 'text-green-500' : 'text-red-500'}`}>
+          {message}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         {/* Service Selection */}
