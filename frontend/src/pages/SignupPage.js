@@ -9,7 +9,8 @@ const SignupPage = () => {
     password: '',
   });
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');  // Message state for success or error
+  const [success, setSuccess] = useState(false);  // Track signup success
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,18 +24,29 @@ const SignupPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
-      setMessage('Registration successful!');
-      navigate('/login');  // Redirect to login page after signup
+      await axios.post('http://localhost:8080/api/auth/register', formData);
+      setMessage('Successfully signed up!');  // Show success message
+      setSuccess(true);  // Mark signup as successful
+      setTimeout(() => {
+        navigate('/login');  // Redirect to login page after 3 seconds
+      }, 3000);
     } catch (error) {
       setMessage('Registration failed, please try again.');
+      setSuccess(false);
     }
   };
 
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold text-center mb-6">Signup</h1>
-      {message && <p className="text-center">{message}</p>}
+
+      {/* Show success or error message */}
+      {message && (
+        <div className={`text-center mb-4 ${success ? 'text-green-600' : 'text-red-600'}`}>
+          {message}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         <input
           type="text"

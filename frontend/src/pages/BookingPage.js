@@ -36,9 +36,12 @@ const BookingPage = () => {
         },
       };
 
+      // Send form data to the backend
       const response = await axios.post('http://localhost:8080/api/bookings', formData, config);
+      
       setMessage('Booking successful!');  // Success message
       setSuccess(true);
+
       // Redirect to confirmation page with the booking details
       navigate('/confirmation', { state: { ...formData } });
     } catch (error) {

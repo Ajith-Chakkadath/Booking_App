@@ -25,9 +25,14 @@ const LoginPage = () => {
       const response = await axios.post('http://localhost:8080/api/auth/login', formData);
       localStorage.setItem('userInfo', JSON.stringify(response.data));  // Store user info in local storage
       setMessage('Login successful!');
+      if(response.data.email == 'ajithkrish@gmail.com'){
+        navigate('/admin')
+      }else{
+        navigate('/booking'); 
+      }
       
       // Redirect to the booking page after successful login
-      navigate('/booking');  
+      
     } catch (error) {
       setMessage('Login failed, please try again.');
     }

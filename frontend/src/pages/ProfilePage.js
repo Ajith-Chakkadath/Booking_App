@@ -3,7 +3,14 @@ import axios from 'axios';
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
   const [bookings, setBookings] = useState([]);
+  const [message, setMessage] = useState('');
+
   const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   // Fetch user profile and bookings
@@ -19,6 +26,7 @@ const ProfilePage = () => {
         // Fetch user profile
         const profileResponse = await axios.get('http://localhost:8080/api/auth/profile', config);
         setUserInfo(profileResponse.data);
+        setFormData({ ...formData, name: profileResponse.data.name, email: profileResponse.data.email });
 
         // Fetch user bookings
         const bookingsResponse = await axios.get('http://localhost:8080/api/bookings/user', config);
@@ -30,6 +38,41 @@ const ProfilePage = () => {
 
     fetchProfileData();
   }, [storedUserInfo.token]);
+
+  // Handle form field changes for profile update
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle profile update submission
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${storedUserInfo.token}`,
+        },
+      };
+
+      // Send the updated profile data to the backend
+      const response = await axios.put('http://localhost:8080/api/auth/profile', { name: formData.name, password: formData.password }, config);
+
+      setMessage('Profile updated successfully!');
+
+      // Update local storage with the new user info if the name is changed
+      localStorage.setItem('userInfo', JSON.stringify({ ...storedUserInfo, name: formData.name }));
+
+      // Optionally, refresh the user info displayed on the page
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setMessage('Profile update failed. Please try again.');
+    }
+  };
 
   // Function to cancel a booking
   const cancelBooking = async (bookingId) => {
@@ -55,16 +98,49 @@ const ProfilePage = () => {
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
 
-      {/* Profile Details */}
-      {userInfo ? (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold">Profile Details</h2>
-          <p><strong>Name:</strong> {userInfo.name}</p>
-          <p><strong>Email:</strong> {userInfo.email}</p>
+      {message && (
+        <div className={`text-center ${message.includes('failed') ? 'text-red-500' : 'text-green-500'}`}>
+          {message}
         </div>
-      ) : (
-        <p>Loading profile...</p>
       )}
+
+      {/* Profile Update Form */}
+      <form onSubmit={handleProfileUpdate} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold">Update Profile</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            disabled  // Disable the email input field
+            className="w-full p-2 border rounded-lg bg-gray-100"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Password (Leave blank if unchanged)</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
+        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+          Update Profile
+        </button>
+      </form>
 
       {/* Bookings Section */}
       <h2 className="text-2xl font-bold mt-6">Your Bookings</h2>

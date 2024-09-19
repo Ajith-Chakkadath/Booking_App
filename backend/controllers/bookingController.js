@@ -13,8 +13,9 @@ const createBooking = async (req, res) => {
       return res.status(400).json({ message: 'This time slot is already booked. Please choose a different time.' });
     }
 
-    // Create a new booking
+    // Create a new booking associated with the logged-in user
     const newBooking = new Booking({
+      user: req.user._id, // Associate booking with the user
       service,
       date,
       time,
@@ -27,6 +28,7 @@ const createBooking = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 const getUserBookings = async (req, res) => {
   try {
