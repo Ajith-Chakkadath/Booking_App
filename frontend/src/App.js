@@ -10,9 +10,6 @@ import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfilePage from './pages/ProfilePage';
 import AdminDashboard from './pages/AdminDashboard';
-import ManageUsers from './pages/ManageUsers';
-import ManageBookings from './pages/ManageBookings';
-import ServiceManagement from './pages/ServiceManagement';
 
 
 function App() {
@@ -41,9 +38,6 @@ function App() {
   }
 />
 <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/users" element={<ProtectedRoute><ManageUsers /></ProtectedRoute>} />
-        <Route path="/admin/bookings" element={<ProtectedRoute><ManageBookings /></ProtectedRoute>} />
-        <Route path="/admin/services" element={<ProtectedRoute><ServiceManagement/></ProtectedRoute>} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
         </Routes>
         <Footer />

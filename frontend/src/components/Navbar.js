@@ -10,6 +10,7 @@ const Navbar = () => {
   };
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  console.log(userInfo)
 
   return (
     <nav className="bg-gray-800 p-4 text-white">
@@ -21,6 +22,11 @@ const Navbar = () => {
           </li>
           {userInfo ? (
             <>
+              {userInfo.role === 'admin' && (
+                <li>
+                  <Link to="/admin" className="hover:underline">Admin Panel</Link>  {/* Link to Admin Panel */}
+                </li>
+              )}
               <li>
                 <Link to="/booking" className="hover:underline">Book Now</Link>
               </li>

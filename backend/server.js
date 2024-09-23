@@ -6,6 +6,8 @@ const connectDB = require('./config/db');  // Import the MongoDB connection
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes')
 const serviceRoutes = require('./routes/serviceRoutes')
+const holidayRoutes = require('./routes/holidayRoutes')
+const workingHoursRoutes = require('./routes/workingHoursRoutes')
 
 // Load environment variables
 dotenv.config(); 
@@ -23,6 +25,8 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin',adminRoutes)
 app.use('/api/services',serviceRoutes)
+app.use('/api/holidays',holidayRoutes)
+app.use('/api/working-hours',workingHoursRoutes)
 
 // Test route
 app.get('/', (req, res) => {
